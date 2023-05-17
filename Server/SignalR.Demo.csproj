@@ -7,8 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CSharpFunctionalExtensions" Version="2.39.0" />
+    <PackageReference Include="MediatR" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SignalR.Demo.Application\SignalR.Demo.Application.csproj" />
+    <ProjectReference Include="..\SignalR.Demo.EF\SignalR.Demo.EF.csproj" />
   </ItemGroup>
 
 </Project>

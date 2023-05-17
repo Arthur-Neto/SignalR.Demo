@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using SignalR.Demo.Application;
+using SignalR.Demo.Domain;
+using SignalR.Demo.EF;
 using SignalR.Demo.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +25,12 @@ builder.Services.AddSignalR();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<IApiDbContext, ApiContext>(optionsBuilder => optionsBuilder.UseInMemoryDatabase(databaseName: "ChatDb"));
+
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<ApplicationAPI>());
 
 var app = builder.Build();
 
