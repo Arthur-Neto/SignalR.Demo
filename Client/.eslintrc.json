@@ -1,29 +1,26 @@
 {
-	"root": true,
-	"ignorePatterns": ["projects/**/*"],
-	"overrides": [
-		{
-			"files": ["*.ts"],
-			"extends": [
-				"eslint:recommended",
-				"plugin:@typescript-eslint/recommended",
-				"plugin:@angular-eslint/recommended",
-				"plugin:@angular-eslint/template/process-inline-templates",
-				"plugin:prettier/recommended"
-			]
-		},
-		{
-			"files": ["*.html"],
-			"extends": ["plugin:@angular-eslint/template/recommended"],
-			"rules": {}
-		  },
-		  {
-			"files": ["*.html"],
-			"excludedFiles": ["*inline-template-*.component.html"],
-			"extends": ["plugin:prettier/recommended"],
-			"rules": {
-			  "prettier/prettier": ["error", { "parser": "angular" }]
-			}
-		  }
-	]
+    "root": true,
+    "overrides": [
+        {
+            "files": ["*.ts"],
+            "parser": "@typescript-eslint/parser",
+            "extends": [
+                "plugin:@angular-eslint/recommended",
+                "plugin:@typescript-eslint/recommended",
+                "plugin:prettier/recommended"
+            ],
+            "plugins": ["prettier"],
+            "rules": {
+                "prettier/prettier": "error"
+            }
+        },
+        {
+            "files": ["*.html"],
+            "extends": ["plugin:@angular-eslint/template/recommended", "prettier"],
+            "plugins": ["prettier"],
+            "rules": {
+                "prettier/prettier": "error"
+            }
+        }
+    ]
 }
