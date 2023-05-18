@@ -58,7 +58,7 @@ app.UseCors(policyName);
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
-    endpoints.MapHub<ChatHub>("/chat");
+    endpoints.MapHub<MessageHub>("/chat");
 });
 
 app.Run();

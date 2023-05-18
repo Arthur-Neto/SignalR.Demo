@@ -1,38 +1,59 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { BehaviorSubject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class SignalrService {
-    public hubHelloMessage: BehaviorSubject<string>;
-    public connection: any;
+    private connection: signalR.HubConnection = new signalR.HubConnectionBuilder().withUrl('https://localhost:8081/chat').build();
 
-    private hubUrl: string;
+    private receivedMessageObject!: IMessage;
+    private sharedObj = new Subject<IMessage>();
 
     constructor() {
-        this.hubUrl = 'https://localhost:8081/chat';
-        this.hubHelloMessage = new BehaviorSubject<string>('');
-    }
-
-    public async initiateSignalrConnection(): Promise<void> {
-        try {
-            this.connection = new signalR.HubConnectionBuilder().withUrl(this.hubUrl).withAutomaticReconnect().build();
-
-            await this.connection.start();
-
-            this.setSignalrClientMethods();
-
-            console.log(`SignalR connection success! connectionId: ${this.connection.connectionId}`);
-        } catch (error) {
-            console.log(`SignalR connection error: ${error}`);
-        }
-    }
-
-    private setSignalrClientMethods(): void {
-        this.connection.on('DisplayMessage', (message: string) => {
-            this.hubHelloMessage.next(message);
+        this.connection.onclose(async () => {
+            await this.start();
         });
+        this.connection.on('SendMessage', (user, message) => {
+            this.mapReceivedMessage(user, message);
+        });
+        this.start();
     }
+
+    public async start() {
+        await this.connection
+            .start()
+            .then(() => console.log('Connection started'))
+            .catch((err) => {
+                console.log('Error while starting connection: ' + err);
+                setTimeout(() => this.start(), 5000);
+            });
+    }
+
+    private mapReceivedMessage(user: string, message: string): void {
+        this.receivedMessageObject = {
+            user: user,
+            text: message,
+        };
+        this.sharedObj.next(this.receivedMessageObject);
+    }
+
+    public joinGroup = (groupId: string) => {
+        this.connection.invoke('JoinGroup', groupId).catch((err) => console.error(err));
+    };
+
+    public sendMessageToGroup = (groupId: string, sender: string, message: string) => {
+        this.connection.invoke('SendMessageToGroup', groupId, sender, message).catch((err) => console.error(err));
+    };
+
+    public retrieveMappedObject(): Observable<IMessage> {
+        return this.sharedObj.asObservable();
+    }
+}
+
+export interface IMessage {
+    user: string;
+    text: string;
 }

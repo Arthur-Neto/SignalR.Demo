@@ -1,1 +1,33 @@
-Número da sala: {{ roomId }}
+<div class="room__header">
+    <h2>Número da sala: {{ roomId }}</h2>
+</div>
+
+<div class="room__chat-box">
+    <mat-card
+        *ngFor="let messageReceived of messagesReceived"
+        [ngClass]="messageReceived.user === message.user ? 'room__chat-box--user-msg' : 'room__chat-box--other-msg'"
+    >
+        <mat-card-header>
+            <mat-card-subtitle>{{ messageReceived.user }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>{{ messageReceived.text }}</p>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+<div class="room__msg-box">
+    <mat-form-field>
+        <mat-label>Texto da mensagem</mat-label>
+        <input matInput title="Digite uma mensagem" [(ngModel)]="message.text" />
+    </mat-form-field>
+
+    <button mat-raised-button (click)="send()">Enviar</button>
+
+    <br />
+
+    <mat-form-field>
+        <mat-label>Nome do Usuário</mat-label>
+        <input matInput title="Nome do Usuário" [(ngModel)]="message.user" />
+    </mat-form-field>
+</div>
