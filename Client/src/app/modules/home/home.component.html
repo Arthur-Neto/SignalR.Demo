@@ -1,0 +1,18 @@
+<h2>SignalR Demo</h2>
+
+<form>
+    <mat-form-field>
+        <mat-label>Número da sala</mat-label>
+        <input #roomValue matInput placeholder="123" type="number" />
+    </mat-form-field>
+
+    <button type="button" mat-raised-button (click)="enterRoom(roomValue.value)">Entrar</button>
+
+    <br />
+
+    <mat-label>ou</mat-label>
+
+    <br />
+
+    <button type="button" mat-raised-button (click)="createRoom()">Criar sala</button>
+</form>
